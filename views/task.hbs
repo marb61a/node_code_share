@@ -24,7 +24,7 @@
  				</div>
 
  				<!-- CHAT ROOM -->
- 				
+
  			</div>
     	</div>
 	</div>
@@ -33,9 +33,35 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/mode/javascript/javascript.min.js"></script>
 
+<script src="/plugins/ot/ot.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
 <script>
+	var EditorClient = ot.EditorClient;
+	var SocketIOAdapter = ot.SocketIOAdapter;
+	var CodeMirrorAdapter = ot.CodeMirrorAdapter;
+
+	var socket = io.connect();	
+
 	var editor = CodeMirror..fromTextArea(document.getElementById("code-screen"), {
     	lineNumbers: true,
     	theme: "monokai"
  	});
+ 	var code = $('#code-screen').val();
+ 	var cmClient;
+
+ 	function init(str, revision, clients, serverAdapter){
+ 		if(!code){
+ 			editor.setValue(str);
+ 		}
+
+ 		cmClient = window.cmClient = new EditorClient(
+ 			revision, clients, serverAdapter, new CodeMirrorAdapter(editor)
+ 		)
+ 	}
+
+ 	socket.on('obj', function(obj){
+ 		init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket));
+ 	})
+ 	
 </script>

@@ -36,4 +36,23 @@ passport.use(new LocalStrategy({
 			return done(null, user);
 		})
 	}	
-))
+));
+
+passport.use(new FacebookStrategy({
+	clientID: '',
+	clientSecret: '',
+	callbackURL: '',
+	profileFields: ['id', 'displayName', 'email']
+}, function(token, refreshToken, profile, done){
+	User.findOne({'facebookId': profile.id}, function(err, user){
+		if(err){
+			return done(err);
+		}
+
+		if(user){
+			return done(null, user);
+		} else {
+			
+		}
+	});
+}))

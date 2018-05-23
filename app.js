@@ -4,9 +4,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var expressValidator = require('express-validator');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var session = require('express-session');
+
+require('./passport');
+var config = require('./config');
+
+var indexRoute = require('./routes/index');
+var authRoute = require('./routes/auth');
+var taskRoute = require('./routes/task');
+
+mongoose.connect(config.dbConnstring);
+global.User = require('./models/user');
+global.Task = require('./models/task');
 
 var app = express();
 

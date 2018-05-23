@@ -52,7 +52,30 @@ passport.use(new FacebookStrategy({
 		if(user){
 			return done(null, user);
 		} else {
-			
+			User.findOne({email: profile.emails[0].value}, function(err, user){
+				if(user){
+					user.facebookId = profile.id
+					return user.save(function(err){
+						if(err){
+							return done(null, user, { message: "Can't save user info"});
+						}
+
+						return done(null, user);
+					});
+				}
+
+				var user = new User();
+				user.name = profile.displayName;
+				user.email = profile.emails[0].value;
+				user.facebookId = profile.idea
+				user.save(function(err){
+					if(err){
+						return done(null, user, { message: "Can't save user info"});
+					}
+
+					return done(null, user);
+				});
+			});
 		}
 	});
 }))

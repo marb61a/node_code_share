@@ -81,11 +81,40 @@
 
  		cmClient = window.cmClient = new EditorClient(
  			revision, clients, serverAdapter, new CodeMirrorAdapter(editor)
- 		)
- 	}
+ 		);
+ 	};
 
  	socket.on('obj', function(obj){
  		init(obj.str, obj.revision, obj.clients, new SocketIOAdapter(socket));
- 	})
+ 	});
+
+ 	var username = $("#chatbox-username").val();
+ 	if(username === ""){
+ 		var userId = Math.floor(Math.random() * 9999).toString();
+    	username = "User" + userId;
+    	$("#chatbox-username").text(username);
+ 	}
+
+ 	var roomId = $("#roomId").val();
+ 	socket.emit('joinRoom',{
+ 		room: roomId,
+ 		username: username
+ 	});
+
+	var userMessage = function(name, text) {
+	    return ('<li class="media"> <div class="media-body"> <div class="media">' +
+	      '<div class="media-body"' +
+	      '<b>' + name + '</b> : ' + text +
+	      '<hr/> </div></div></div></li>'
+	    );
+	}; 	
+
+	var sendMessage = function(){
+		var userMessage = $('#userMessage').val();
+    	socket.emit('chatMessage', {
+    		message: userMessage, username: username
+    	});
+    	$('#userMessage').val("");
+	};
 
 </script>

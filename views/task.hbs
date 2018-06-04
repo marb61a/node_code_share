@@ -154,4 +154,34 @@
    		step2();
 	});
 
+	// Setting up click handlers
+	$(function(){
+		$('#make-call').click(function(){
+			// Start a call
+			var call = peer.call($('#callto-id').val(), window.localStream);
+			step3(call);
+		});
+
+		$('#end-call').click(function(){
+			window.existingCall.close();
+        	step2();
+		});
+
+		step1();
+	});
+
+	function step1(){
+		// Get the audio and video stream
+		navigator.getUserMedia({audio: true, video: true}, function(stream){
+			// Set the video displays
+			$('#my-video').prop('src', URL.createObjectURL(stream));
+			window.localStream = stream;
+			step2();
+		},
+			function(){ 
+				$('#step1-error').show(); 
+			}
+		);
+	};
+
 </script>

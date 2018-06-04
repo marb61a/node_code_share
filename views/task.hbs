@@ -117,4 +117,41 @@
     	$('#userMessage').val("");
 	};
 
+	socket.on('chatMessage', function(data){
+		$('#chatbox-listMessages')
+			.append(userMessage(data.username, data.message))
+	});
+
+	// PeerJS
+	// Shim for compatibility
+	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+	// PeerJS Object
+	var peer = new Peer(username + roomId, {
+      host: '',
+      path: '/peerjs',
+      port: 443,
+      secure: true,
+      key: '',
+      debug: true
+    });
+
+	peer.on('open', function(){
+		$('#my-id').text(peer.id);
+	});    
+
+	// Receiving a call
+	peer.on('call', function(call){
+		// For demonstration purposes answer the call automatically
+		call.answer(window.localStream);
+    	step3(call);
+	});
+
+	peer.on('error', function(err){
+		alert(err.message);
+    	
+    	// Return to step 2 if an error occurs
+   		step2();
+	});
+
 </script>

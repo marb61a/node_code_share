@@ -58,7 +58,7 @@
 
 <script src="/plugins/ot/ot.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script></script>
+<script src=""></script>
 
 <script>
 	var EditorClient = ot.EditorClient;
@@ -182,6 +182,30 @@
 				$('#step1-error').show(); 
 			}
 		);
+	};
+
+	function step2(){
+		$('#step1, #step3').hide();
+      	$('#step2').show();
+	};
+
+	function step3(){
+		// Hang up on an existing call (If it exists)
+		if(window.existingCall){
+			window.existingCall.close();
+		}
+
+		// Wait for the call stream then set the video display
+		call.on('stream', function(stream){
+			$('#second-video').prop('src', URL.createObjectURL(stream));
+		});
+
+		// UI
+		window.existingCall = call;
+		$('#second-id').text(call.peer);
+		call.on('close', step2);
+		$('#step1, #step2').hide();
+		$('#step3').show();	
 	};
 
 </script>

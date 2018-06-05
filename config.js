@@ -2,6 +2,10 @@
 
 module.exports = {
 	mailer: {
-		service: ''
+		service: 'Gmail',
+		auth:{
+			user: '',
+			pass: ''
+		}
 	}
 } 

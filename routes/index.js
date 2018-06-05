@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+var nodemailer = require('nodemailer');
+var config = require('../config');
+var transporter = nodemailer.createTransport(config.mailer);
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Code-Share : A platform for sharing your code and coding'});
@@ -15,15 +19,10 @@ router.route('/contact')
 	  res.render('contact', { title: 'Code-Share : A platform for sharing your code and coding'});     									
 	})
 	.post(function(req, res, next){
-		res.render('thank', { title: 'Code-Share : A platform for sharing your code and coding'});
+		req.checkBody('name', 'Empty name').notEmpty();
+    	req.checkBody('email', 'Invalid email').isEmail();
+    	req.checkBody('message', 'Empty message').notEmpty();
+
 	})
-
-router.get('/login', function(req, res, next){
-	res.render('login', { title: 'Login your account' })
-});
-
-router.get('/register', function(req, res, next){
-	res.render('register', { title: 'Register a new account'});
-});
 
 module.exports = router;
